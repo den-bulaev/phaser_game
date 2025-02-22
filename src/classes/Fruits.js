@@ -1,17 +1,17 @@
-import { Math } from "phaser";
+import { Math as PhaserMath } from "phaser";
 import { Bombs } from "./Bombs";
 
-export class Stars {
-  constructor(scene, starsAmount, starTexture, stepX, hero, handleGameOver) {
+export class Fruits {
+  constructor(scene, possibleDrops, hero, handleGameOver) {
     this.scene = scene;
-    this.starsAmount = starsAmount;
-    this.starTexture = starTexture;
-    this.stepX = stepX;
+    this.possibleDrops = possibleDrops;
     this.hero = hero;
     this.handleGameOver = handleGameOver;
 
     this.score = 0;
     this.scoreText = "";
+    this.starsAmount = 12;
+    this.stepX = 70;
   }
 
   createStars(platforms, bombTexture) {
@@ -23,13 +23,13 @@ export class Stars {
       .setOrigin(0.5, 0.5);
 
     const stars = this.scene.physics.add.group({
-      key: this.starTexture,
+      key: this.getNextTexture(),
       repeat: this.starsAmount - 1,
       setXY: { x: this.starsAmount, y: 0, stepX: this.stepX },
     });
 
     stars.children.iterate((child) =>
-      child.setBounceY(Math.FloatBetween(0.4, 0.8))
+      child.setBounceY(PhaserMath.FloatBetween(0.4, 0.8))
     );
 
     const collectStar = (player, star) => {
@@ -38,9 +38,12 @@ export class Stars {
       this.score += 10;
       this.scene.scoreText.setText("Score: " + this.score);
 
+      const nextTexture = this.getNextTexture();
+
       if (stars.countActive(true) === 0) {
         stars.children.iterate(function (child) {
           child.enableBody(true, child.x, 0, true, true);
+          child.setTexture(nextTexture);
         });
 
         const bombs = new Bombs(this.scene, this.handleGameOver);
@@ -57,5 +60,11 @@ export class Stars {
     );
 
     return stars;
+  }
+
+  getNextTexture() {
+    return this.possibleDrops[
+      Math.floor(Math.random() * this.possibleDrops.length)
+    ];
   }
 }

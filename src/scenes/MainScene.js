@@ -1,12 +1,15 @@
 import { Scene } from "phaser";
 
 import { Hero } from "../classes/Hero";
-import { Stars } from "../classes/Stars";
+import { Fruits } from "../classes/Fruits";
 
-import bomb from "../assets/bomb.png";
+import alienShip from "../assets/alienShipBig.png";
 import platform from "../assets/platform.png";
 import sky from "../assets/sky.png";
-import star from "../assets/star.png";
+import watermelonCracked from "../assets/cracked_watermelon.png";
+import banana from "../assets/banana.png";
+import orange from "../assets/orange.png";
+import apple from "../assets/apple.png";
 import dude from "../assets/dude.png";
 
 export class MainScene extends Scene {
@@ -21,10 +24,13 @@ export class MainScene extends Scene {
   }
 
   preload() {
-    this.load.image("bomb", bomb);
+    this.load.image("alienShip", alienShip);
     this.load.image("platform", platform);
     this.load.image("sky", sky);
-    this.load.image("star", star);
+    this.load.image("watermelonCracked", watermelonCracked);
+    this.load.image("banana", banana);
+    this.load.image("orange", orange);
+    this.load.image("apple", apple);
     this.load.spritesheet("dude", dude, {
       frameWidth: 32,
       frameHeight: 48,
@@ -45,15 +51,13 @@ export class MainScene extends Scene {
     this.player = new Hero(this, 100, 450, "dude");
     this.physics.add.collider(this.player.heroSprite, platforms);
 
-    // Stars
-    this.stars = new Stars(
+    // Fruits
+    this.stars = new Fruits(
       this,
-      12,
-      "star",
-      70,
+      ["watermelonCracked", "banana", "orange", "apple"],
       this.player.heroSprite,
       this.handleGameOver.bind(this)
-    ).createStars(platforms, "bomb");
+    ).createStars(platforms, "alienShip");
 
     this.physics.add.collider(this.stars, platforms);
 
