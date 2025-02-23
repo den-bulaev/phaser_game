@@ -1,0 +1,19 @@
+{
+  "name": "The Blendor",
+  "version": "1.0",
+  "description": "Collect fruits and escape from aliens",
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "manifest_version": 3,
+  "author": "Den",
+  "permissions": [],
+  "host_permissions": [],
+  "action": {
+    "default_popup": "index.html",
+    "default_title": "The Blendor",
+    "default_icon": "icon48.png"
+  }
+}

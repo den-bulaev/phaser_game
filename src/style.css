@@ -10,6 +10,6 @@
 
 html,
 body {
-  min-width: 320px;
-  min-height: 100vh;
+  width: 800px;
+  height: 600px;
 }
