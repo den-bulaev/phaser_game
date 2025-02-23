@@ -5,12 +5,12 @@ import { Fruits } from "../classes/Fruits";
 
 import alienShip from "../assets/alienShipBig.png";
 import platform from "../assets/platform.png";
-import sky from "../assets/sky.png";
+import sky from "../assets/skyWithMountain.png";
 import watermelonCracked from "../assets/cracked_watermelon.png";
 import banana from "../assets/banana.png";
 import orange from "../assets/orange.png";
 import apple from "../assets/apple.png";
-import dude from "../assets/dude.png";
+import dude from "../assets/blender.png";
 
 export class MainScene extends Scene {
   constructor() {

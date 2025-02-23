@@ -17,6 +17,16 @@ export class Hero {
     }
 
     this.scene.anims.create({
+      key: "jumpLeft",
+      frames: this.scene.anims.generateFrameNumbers(this.texture, {
+        start: 3,
+        end: 3,
+      }),
+      frameRate: 10,
+      repeat: -1,
+    });
+
+    this.scene.anims.create({
       key: "left",
       frames: this.scene.anims.generateFrameNumbers(this.texture, {
         start: 0,
@@ -40,6 +50,16 @@ export class Hero {
       key: "turn",
       frames: [{ key: this.texture, frame: 4 }],
       frameRate: 20,
+    });
+
+    this.scene.anims.create({
+      key: "jumpRight",
+      frames: this.scene.anims.generateFrameNumbers(this.texture, {
+        start: 8,
+        end: 8,
+      }),
+      frameRate: 10,
+      repeat: -1,
     });
 
     this.scene.anims.create({
@@ -69,12 +89,30 @@ export class Hero {
     const keyA = this.scene.input.keyboard.addKey(Input.Keyboard.KeyCodes.A);
     const keyW = this.scene.input.keyboard.addKey(Input.Keyboard.KeyCodes.W);
 
+    // if (
+    //   (cursors.left.isDown || keyA.isDown) &&
+    //   !this.heroSprite.body.touching.down
+    // ) {
+    //   this.heroSprite.anims.play("jumpLeft", true);
+    // } else if (
+    //   (cursors.right.isDown || keyD.isDown) &&
+    //   !this.heroSprite.body.touching.down
+    // ) {
+    //   this.heroSprite.anims.play("jumpRight", true);
+    // }
+
     if (cursors.left.isDown || keyA.isDown) {
       this.heroSprite.setVelocityX(-160);
-      this.heroSprite.anims.play("left", true);
+      this.heroSprite.anims.play(
+        this.heroSprite.body.touching.down ? "left" : "jumpLeft",
+        true
+      );
     } else if (cursors.right.isDown || keyD.isDown) {
       this.heroSprite.setVelocityX(160);
-      this.heroSprite.anims.play("right", true);
+      this.heroSprite.anims.play(
+        this.heroSprite.body.touching.down ? "right" : "jumpRight",
+        true
+      );
     } else {
       this.heroSprite.setVelocityX(0);
       this.heroSprite.anims.play("turn");

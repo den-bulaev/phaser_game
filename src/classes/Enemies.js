@@ -1,6 +1,6 @@
 import { Math } from "phaser";
 
-export class Bombs {
+export class Enemies {
   constructor(scene, handleGameOver) {
     this.scene = scene;
     this.bombs = this.scene.physics.add.group();
