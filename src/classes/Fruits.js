@@ -1,5 +1,5 @@
 import { Math as PhaserMath } from "phaser";
-import { Bombs } from "./Bombs";
+import { Enemies } from "./Enemies";
 
 export class Fruits {
   constructor(scene, possibleDrops, hero, handleGameOver) {
@@ -46,8 +46,8 @@ export class Fruits {
           child.setTexture(nextTexture);
         });
 
-        const bombs = new Bombs(this.scene, this.handleGameOver);
-        bombs.createBombs(platforms, player, bombTexture);
+        const enemies = new Enemies(this.scene, this.handleGameOver);
+        enemies.createBombs(platforms, player, bombTexture);
       }
     };
 
