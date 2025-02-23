@@ -88,18 +88,7 @@ export class Hero {
     const keyD = this.scene.input.keyboard.addKey(Input.Keyboard.KeyCodes.D);
     const keyA = this.scene.input.keyboard.addKey(Input.Keyboard.KeyCodes.A);
     const keyW = this.scene.input.keyboard.addKey(Input.Keyboard.KeyCodes.W);
-
-    // if (
-    //   (cursors.left.isDown || keyA.isDown) &&
-    //   !this.heroSprite.body.touching.down
-    // ) {
-    //   this.heroSprite.anims.play("jumpLeft", true);
-    // } else if (
-    //   (cursors.right.isDown || keyD.isDown) &&
-    //   !this.heroSprite.body.touching.down
-    // ) {
-    //   this.heroSprite.anims.play("jumpRight", true);
-    // }
+    const keyS = this.scene.input.keyboard.addKey(Input.Keyboard.KeyCodes.S);
 
     if (cursors.left.isDown || keyA.isDown) {
       this.heroSprite.setVelocityX(-160);
@@ -114,7 +103,12 @@ export class Hero {
         true
       );
     } else {
-      this.heroSprite.setVelocityX(0);
+      this.heroSprite.setVelocityX(
+        (cursors.down.isDown || keyS.isDown) &&
+          !this.heroSprite.body.touching.down
+          ? -15
+          : 0
+      );
       this.heroSprite.anims.play("turn");
     }
 
@@ -123,6 +117,15 @@ export class Hero {
       this.heroSprite.body.touching.down
     ) {
       this.heroSprite.setVelocityY(-330);
+    }
+
+    if (
+      (cursors.down.isDown || keyS.isDown) &&
+      !this.heroSprite.body.touching.down
+    ) {
+      this.heroSprite.setGravity(900);
+    } else {
+      this.heroSprite.setGravity(0);
     }
   }
 }
