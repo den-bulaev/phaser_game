@@ -14,7 +14,7 @@ export class Fruits {
     this.stepX = 70;
   }
 
-  createStars(platforms, bombTexture) {
+  createFruits(platforms, bombTexture) {
     this.scene.scoreText = this.scene.add
       .text(400, 16, "Score: 0", {
         fontSize: "32px",
@@ -32,8 +32,10 @@ export class Fruits {
       child.setBounceY(PhaserMath.FloatBetween(0.4, 0.8))
     );
 
-    const collectStar = (player, star) => {
-      star.disableBody(true, true);
+    const collectFruit = (player, fruit) => {
+      this.hero.setLiquidTint(fruit.texture.key);
+
+      fruit.disableBody(true, true);
 
       this.score += 10;
       this.scene.scoreText.setText("Score: " + this.score);
@@ -52,9 +54,9 @@ export class Fruits {
     };
 
     this.scene.physics.add.overlap(
-      this.hero,
+      this.hero.heroSprite,
       stars,
-      collectStar,
+      collectFruit,
       null,
       this.scene
     );
