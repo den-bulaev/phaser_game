@@ -6,34 +6,46 @@ import { Fruits } from "../classes/Fruits";
 import alienShip from "../assets/alienShipBig.png";
 import platform from "../assets/platform.png";
 import sky from "../assets/skyWithMountain.png";
-import watermelonCracked from "../assets/cracked_watermelon.png";
+import watermelon from "../assets/cracked_watermelon.png";
 import banana from "../assets/banana.png";
 import orange from "../assets/orange.png";
 import apple from "../assets/apple.png";
-import dude from "../assets/blender.png";
+import blender from "../assets/blender.png";
+import liquidSprite from "../assets/liquidSprite.png";
 
 export class MainScene extends Scene {
   constructor() {
     super("Main");
 
     this.player = null;
-    this.stars = null;
+    this.liquid = null;
+    this.fruits = null;
     this.playBtn = null;
     this.gameOverText = "";
     this.restartBtn = null;
+    this.possibleDrops = {
+      watermelon: 0xf74a6c,
+      banana: 0xf7ef04,
+      apple: 0x8aff59,
+      orange: 0xf78e04,
+    };
   }
 
   preload() {
     this.load.image("alienShip", alienShip);
     this.load.image("platform", platform);
     this.load.image("sky", sky);
-    this.load.image("watermelonCracked", watermelonCracked);
+    this.load.image("watermelon", watermelon);
     this.load.image("banana", banana);
     this.load.image("orange", orange);
     this.load.image("apple", apple);
-    this.load.spritesheet("dude", dude, {
+    this.load.spritesheet("blender", blender, {
       frameWidth: 32,
       frameHeight: 48,
+    });
+    this.load.spritesheet("liquid", liquidSprite, {
+      frameWidth: 18,
+      frameHeight: 19,
     });
   }
 
@@ -48,18 +60,18 @@ export class MainScene extends Scene {
     platforms.create(750, 220, "platform");
 
     // Player
-    this.player = new Hero(this, 100, 450, "dude");
+    this.player = new Hero(this, 100, 450, "blender", this.possibleDrops);
     this.physics.add.collider(this.player.heroSprite, platforms);
 
     // Fruits
-    this.stars = new Fruits(
+    this.fruits = new Fruits(
       this,
-      ["watermelonCracked", "banana", "orange", "apple"],
-      this.player.heroSprite,
+      Object.keys(this.possibleDrops),
+      this.player,
       this.handleGameOver.bind(this)
-    ).createStars(platforms, "alienShip");
+    ).createFruits(platforms, "alienShip");
 
-    this.physics.add.collider(this.stars, platforms);
+    this.physics.add.collider(this.fruits, platforms);
 
     this.gameOverText = this.add
       .text(400, 300, "GAME OVER", {

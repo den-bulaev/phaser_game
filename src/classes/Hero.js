@@ -1,17 +1,41 @@
 import { Input } from "phaser";
 
 export class Hero {
-  constructor(scene, x, y, texture) {
+  constructor(scene, x, y, texture, possibleDrops) {
     this.scene = scene;
     this.texture = texture;
+    this.liquid = this.scene.physics.add.sprite(x, y, "liquid");
     this.heroSprite = this.scene.physics.add.sprite(x, y, texture);
     this.heroSprite.setBounce(0.2);
     this.heroSprite.setCollideWorldBounds(true);
     this.speed = 200;
-    this.createAnimations();
+    this.possibleDrops = possibleDrops;
+    this.#createAnimations();
   }
 
-  createAnimations() {
+  #createAnimations() {
+    this.liquid.body.setAllowGravity(false);
+    this.liquid.visible = false;
+
+    this.scene.events.on("postupdate", () => {
+      this.liquid.x = this.heroSprite.x;
+      this.liquid.y = this.heroSprite.y;
+    });
+
+    if (!this.scene.anims.exists("liquid")) {
+      this.scene.anims.create({
+        key: "liquid",
+        frames: this.scene.anims.generateFrameNumbers("liquid", {
+          start: 0,
+          end: 19,
+        }),
+        frameRate: 10,
+        repeat: -1,
+      });
+    }
+
+    this.liquid.play("liquid");
+
     if (this.scene.anims.exists("left")) {
       return;
     }
@@ -127,5 +151,10 @@ export class Hero {
     } else {
       this.heroSprite.setGravity(0);
     }
+  }
+
+  setLiquidTint(color) {
+    this.liquid.setTintFill(this.possibleDrops[color]);
+    this.liquid.visible = true;
   }
 }
