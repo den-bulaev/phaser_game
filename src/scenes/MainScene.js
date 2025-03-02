@@ -10,6 +10,8 @@ import watermelon from "../assets/cracked_watermelon.png";
 import banana from "../assets/banana.png";
 import orange from "../assets/orange.png";
 import apple from "../assets/apple.png";
+import grapes from "../assets/grapes.png";
+import pear from "../assets/pear.png";
 import blender from "../assets/blender.png";
 import liquidSprite from "../assets/liquidSprite.png";
 
@@ -28,6 +30,8 @@ export class MainScene extends Scene {
       banana: 0xf7ef04,
       apple: 0x8aff59,
       orange: 0xf78e04,
+      grapes: 0x8880fc,
+      pear: 0xccff96,
     };
   }
 
@@ -39,6 +43,8 @@ export class MainScene extends Scene {
     this.load.image("banana", banana);
     this.load.image("orange", orange);
     this.load.image("apple", apple);
+    this.load.image("grapes", grapes);
+    this.load.image("pear", pear);
     this.load.spritesheet("blender", blender, {
       frameWidth: 32,
       frameHeight: 48,
