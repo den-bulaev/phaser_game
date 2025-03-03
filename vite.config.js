@@ -9,3 +9,11 @@ export default defineConfig({
     outDir: "dist",
   },
 });
+
+// TODO: Use this one for itch.io
+// export default defineConfig({
+//   base: "./",
+//   build: {
+//     outDir: "dist",
+//   },
+// });
