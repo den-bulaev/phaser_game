@@ -1,7 +1,8 @@
-import { Scene } from "phaser";
+import { Scene, Math } from "phaser";
 
 import { Hero } from "../classes/Hero";
 import { Fruits } from "../classes/Fruits";
+import { Enemies } from "../classes/Enemies";
 
 import alienShip from "../assets/alienShipBig.png";
 import platform from "../assets/platform.png";
@@ -13,6 +14,7 @@ import apple from "../assets/apple.png";
 import grapes from "../assets/grapes.png";
 import pear from "../assets/pear.png";
 import blender from "../assets/blender.png";
+import fruitShield from "../assets/fruit_shield.png";
 import liquidSprite from "../assets/liquidSprite.png";
 
 export class MainScene extends Scene {
@@ -20,6 +22,8 @@ export class MainScene extends Scene {
     super("Main");
 
     this.player = null;
+    this.fruitShield = null;
+    this.enemies = null;
     this.liquid = null;
     this.fruits = null;
     this.playBtn = null;
@@ -45,6 +49,7 @@ export class MainScene extends Scene {
     this.load.image("apple", apple);
     this.load.image("grapes", grapes);
     this.load.image("pear", pear);
+    this.load.image("fruitShield", fruitShield);
     this.load.spritesheet("blender", blender, {
       frameWidth: 32,
       frameHeight: 48,
@@ -56,6 +61,52 @@ export class MainScene extends Scene {
   }
 
   create() {
+    this.input.keyboard.on("keydown-SPACE", () => {
+      if (this.player.isEmpty) {
+        return;
+      }
+
+      const fruitShield = this.physics.add.image(
+        this.player.heroSprite.x,
+        this.player.heroSprite.y,
+        "fruitShield"
+      );
+
+      if (this.player.liquidColor) {
+        fruitShield.setTintFill(this.player.liquidColor);
+      }
+
+      if (this.player.direction === "left") {
+        fruitShield.flipX = true;
+      }
+
+      fruitShield.body.setAllowGravity(false);
+      fruitShield.setVelocityX(this.player.direction === "left" ? -300 : 300);
+      fruitShield.setCollideWorldBounds(true);
+      fruitShield.body.onWorldBounds = true;
+
+      fruitShield.body.world.on("worldbounds", (body) => {
+        if (body.gameObject === fruitShield) {
+          fruitShield.setVelocityX(0);
+          fruitShield.destroy();
+        }
+      });
+
+      this.physics.add.collider(
+        fruitShield,
+        this.enemies.enemies,
+        (bullet, enemy) => {
+          let direction = new Math.Vector2(
+            enemy.x - bullet.x,
+            enemy.y - bullet.y
+          );
+          direction.normalize().scale(300);
+          enemy.body.setVelocity(direction.x, direction.y);
+          bullet.destroy();
+        }
+      );
+    });
+
     this.add.image(400, 300, "sky");
 
     // Platforms
@@ -69,13 +120,21 @@ export class MainScene extends Scene {
     this.player = new Hero(this, 100, 450, "blender", this.possibleDrops);
     this.physics.add.collider(this.player.heroSprite, platforms);
 
+    // Enemies
+    this.enemies = new Enemies(this, this.handleGameOver);
+
     // Fruits
     this.fruits = new Fruits(
       this,
       Object.keys(this.possibleDrops),
       this.player,
-      this.handleGameOver.bind(this)
-    ).createFruits(platforms, "alienShip");
+      () =>
+        this.enemies.createEnemies(
+          platforms,
+          this.player.heroSprite,
+          "alienShip"
+        )
+    ).createFruits();
 
     this.physics.add.collider(this.fruits, platforms);
 
