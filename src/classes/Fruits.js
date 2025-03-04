@@ -1,12 +1,11 @@
 import { Math as PhaserMath } from "phaser";
-import { Enemies } from "./Enemies";
 
 export class Fruits {
-  constructor(scene, possibleDrops, hero, handleGameOver) {
+  constructor(scene, possibleDrops, hero, createEnemy) {
     this.scene = scene;
     this.possibleDrops = possibleDrops;
     this.hero = hero;
-    this.handleGameOver = handleGameOver;
+    this.createEnemy = createEnemy;
 
     this.score = 0;
     this.scoreText = "";
@@ -14,7 +13,7 @@ export class Fruits {
     this.stepX = 70;
   }
 
-  createFruits(platforms, bombTexture) {
+  createFruits() {
     this.scene.scoreText = this.scene.add
       .text(400, 16, "Score: 0", {
         fontSize: "32px",
@@ -22,13 +21,13 @@ export class Fruits {
       })
       .setOrigin(0.5, 0.5);
 
-    const stars = this.scene.physics.add.group({
+    const fruits = this.scene.physics.add.group({
       key: this.getNextTexture(),
       repeat: this.starsAmount - 1,
       setXY: { x: this.starsAmount, y: 0, stepX: this.stepX },
     });
 
-    stars.children.iterate((child) =>
+    fruits.children.iterate((child) =>
       child.setBounceY(PhaserMath.FloatBetween(0.4, 0.8))
     );
 
@@ -42,26 +41,25 @@ export class Fruits {
 
       const nextTexture = this.getNextTexture();
 
-      if (stars.countActive(true) === 0) {
-        stars.children.iterate(function (child) {
+      if (fruits.countActive(true) === 0) {
+        fruits.children.iterate(function (child) {
           child.enableBody(true, child.x, 0, true, true);
           child.setTexture(nextTexture);
         });
 
-        const enemies = new Enemies(this.scene, this.handleGameOver);
-        enemies.createBombs(platforms, player, bombTexture);
+        this.createEnemy();
       }
     };
 
     this.scene.physics.add.overlap(
       this.hero.heroSprite,
-      stars,
+      fruits,
       collectFruit,
       null,
       this.scene
     );
 
-    return stars;
+    return fruits;
   }
 
   getNextTexture() {
