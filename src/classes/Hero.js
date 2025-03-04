@@ -10,6 +10,9 @@ export class Hero {
     this.heroSprite.setCollideWorldBounds(true);
     this.speed = 200;
     this.possibleDrops = possibleDrops;
+    this.direction = "right";
+    this.liquidColor = "";
+    this.isEmpty = true;
     this.#createAnimations();
   }
 
@@ -115,12 +118,14 @@ export class Hero {
     const keyS = this.scene.input.keyboard.addKey(Input.Keyboard.KeyCodes.S);
 
     if (cursors.left.isDown || keyA.isDown) {
+      this.direction = "left";
       this.heroSprite.setVelocityX(-160);
       this.heroSprite.anims.play(
         this.heroSprite.body.touching.down ? "left" : "jumpLeft",
         true
       );
     } else if (cursors.right.isDown || keyD.isDown) {
+      this.direction = "right";
       this.heroSprite.setVelocityX(160);
       this.heroSprite.anims.play(
         this.heroSprite.body.touching.down ? "right" : "jumpRight",
@@ -154,7 +159,9 @@ export class Hero {
   }
 
   setLiquidTint(color) {
+    this.liquidColor = this.possibleDrops[color];
     this.liquid.setTintFill(this.possibleDrops[color]);
     this.liquid.visible = true;
+    this.isEmpty = false;
   }
 }
